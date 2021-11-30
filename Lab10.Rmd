@@ -1,0 +1,106 @@
+---
+title: "ESM 206 Lab 10"
+author: "Logan Ossentjuk"
+date: "11/30/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(usethis)
+library(janitor)
+
+# New Packages 
+library(beepr)
+library(praise)
+library(cowsay)
+library(paletteer)
+library(sf)
+
+```
+
+## beebr beeps
+
+Use function `beep()` in the beepr package to make an aurio alert when your code is done working 
+
+
+```{r, eval = FALSE} 
+#eval = FALSE makes it not get run when you knit 
+
+for(i in rev(seq(1:9999))) {
+  
+  print(paste(i , "bottles of beer on the wall"))
+}
+
+beep(6)
+```
+
+
+## praise and cowsay
+
+Packages built with a single purpose: to be kind and fun 
+
+```{r}
+praise("${Exclamation}, ${EXCLAMATION}...${exclamation}!!!!")
+
+praise("Holy ${creating}, Batman - this code is ${ADJECTIVE}!")
+```
+
+Use `cowsay::say()` to make a character say something to you 
+
+```{r}
+say("Waddup", by = "hypnotoad")
+```
+
+#To create a version controlled project from a local project
+
+```{r, eval = FALSE}
+# Run the below code in the consol 
+
+#usethis::use_git()
+- select yes
+- select yes again
+#usethis::use_github()
+run
+```
+
+
+## Use `paletteer` to access thousands of color palletts
+
+```{r}
+storms %>% 
+  group_by(name) %>% 
+  summarize(min_pressure = min(pressure, na.rm = TRUE)) %>% 
+  slice_min(n = 10, min_pressure) %>% 
+  ggplot(aes(x = min_pressure, y = name)) + 
+  geom_col(aes(fill = name)) +
+  scale_fill_paletteer_d("beyonce::X87")
+
+```
+
+## One spatial data example 
+
+```{r}
+#sf packages: simple features 
+# for spatial data 
+
+vegetation <- read_sf("doc.kml") %>% 
+  select(Name) %>% 
+  clean_names()
+
+ggplot(data = vegetation) +
+  geom_sf(aes(fill = name), color = NA) + 
+  scale_fill_paletteer_d("palettetown::magneton") +
+  theme_minimal()
+
+# Update theme to theme_minimal
+# Change fill color based on vegetation type 
+# Set color of the line to NA (color = NA)
+```
+
+```{r}
+ggsave(filename = "my_awesome_map.jpg", width = 8, height = 5)
+```
+
